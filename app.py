@@ -7,19 +7,26 @@ from models.train_models import train_models
 from models.evaluate_models import evaluate_lstm_model, evaluate_rf_model
 import matplotlib.pyplot as plt
 import seaborn as sns
+from dotenv import load_dotenv, dotenv_values
+import os
+
+load_dotenv()
 
 st.title("Weather Prediction App")
 
-api_key = "6943b1892dcb4596ad271704242505"
+api_key = os.getenv("WEATHER_API_KEY")
+
 location = st.text_input("Enter location")
 
 if st.button("Fetch Weather Data"):
     with st.spinner("Fetching and processing data..."):
         try:
             data = fetch_weather_data(api_key, location)
+            # st.write(data)
             preprocessed_data = preprocess_data(data)
+            # st.write(preprocessed_data)
             features = feature_engineering(preprocessed_data)
-
+            # st.write(features)
             if len(features) < 20:
                 st.error(
                     "Not enough data points to train the model. Please fetch more data."
